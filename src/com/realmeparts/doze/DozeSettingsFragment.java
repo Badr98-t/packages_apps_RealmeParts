@@ -25,7 +25,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import androidx.preference.Preference;
 import androidx.preference.Preference.OnPreferenceChangeListener;
@@ -34,11 +34,12 @@ import androidx.preference.PreferenceFragment;
 import androidx.preference.SwitchPreference;
 
 import com.android.settingslib.widget.MainSwitchPreference;
+import com.android.settingslib.widget.OnMainSwitchChangeListener;
 
 import com.realmeparts.R;
 
 public class DozeSettingsFragment extends PreferenceFragment implements OnPreferenceChangeListener,
-        CompoundButton.OnCheckedChangeListener {
+        OnMainSwitchChangeListener {
 
     private final Handler mHandler = new Handler();
     private MainSwitchPreference mSwitchBar;
@@ -115,7 +116,7 @@ public class DozeSettingsFragment extends PreferenceFragment implements OnPrefer
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onSwitchChanged(Switch switchView, boolean isChecked) {
         DozeUtils.enableDoze(getActivity(), isChecked);
         DozeUtils.checkDozeService(getActivity());
 
