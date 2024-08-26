@@ -6,6 +6,12 @@ on boot
     chown system system /sys/kernel/oppo_display/LCM_CABC
     chmod 0644 /sys/kernel/oppo_display/LCM_CABC
 
+    chown system system /sys/kernel/oplus_display/cabc
+    chmod 0644 /sys/kernel/oplus_display/cabc
+
+    chown system system /sys/kernel/oplus_display/LCM_CABC
+    chmod 0644 /sys/kernel/oplus_display/LCM_CABC
+
     # Disable performance profile by default
     setprop perf_profile 0
 
@@ -13,18 +19,61 @@ on boot
 on property:persist.cabc_profile=0
     write /sys/kernel/oppo_display/cabc 0
     write /sys/kernel/oppo_display/LCM_CABC 0
+   write /sys/kernel/oplus_display/cabc 0
+    write /sys/kernel/oplus_display/LCM_CABC 0
+
 
     # CABC on
 on property:persist.cabc_profile=1
     write /sys/kernel/oppo_display/cabc 1
     write /sys/kernel/oppo_display/LCM_CABC 1
-
+    write /sys/kernel/oplus_display/cabc 1
+    write /sys/kernel/oplus_display/LCM_CABC 1    
+   
     # CABC balanced
 on property:persist.cabc_profile=2
     write /sys/kernel/oppo_display/cabc 2
     write /sys/kernel/oppo_display/LCM_CABC 2
+    write /sys/kernel/oplus_display/cabc 2
+    write /sys/kernel/oplus_display/LCM_CABC 2
 
     # CABC aggressive
 on property:persist.cabc_profile=3
     write /sys/kernel/oppo_display/cabc 3
     write /sys/kernel/oppo_display/LCM_CABC 3
+    write /sys/kernel/oplus_display/cabc 3
+    write /sys/kernel/oplus_display/LCM_CABC 3
+
+ 
+    # Force Game Mode
+    chown system system /proc/touchpanel/game_switch_enable
+    chmod 0666 /proc/touchpanel/game_switch_enable
+
+    # Measured FPS
+    chown system graphics /sys/class/drm/sde-crtc-0/measured_fps
+    chmod 0666 /sys/class/drm/sde-crtc-0/measured_fps
+    
+    # GPU
+    chown system system /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost
+    chmod 0666 /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost
+    
+    # OTG
+    chown system system /sys/class/power_supply/usb/otg_switch
+    chmod 0666 /sys/class/power_supply/usb/otg_switch
+    chown system system /sys/devices/virtual/oplus_chg/usb/otg_switch
+    chmod 0666 /sys/devices/virtual/oplus_chg/usb/otg_switch
+    write /sys/class/oplus_chg/usb/otg_switch 1
+
+    # Edge Touch
+    chown system system /proc/touchpanel/oplus_tp_direction
+    chown system system /proc/touchpanel/oplus_tp_limit_enable
+    chown system system /proc/touchpanel/oplus_tp_limit_whitelist
+    chown system system /proc/touchpanel/tpedge_limit_enable
+    chmod 0666 /proc/touchpanel/oplus_tp_direction
+    chmod 0666 /proc/touchpanel/oplus_tp_limit_enable
+    chmod 0666 /proc/touchpanel/oplus_tp_limit_whitelist
+    chmod 0666 /proc/touchpanel/tpedge_limit_enable
+    write /proc/touchpanel/oplus_tp_direction 1
+    write /proc/touchpanel/oplus_tp_limit_enable 1
+    write /proc/touchpanel/oplus_tp_limit_whitelist 1
+    write /proc/touchpanel/tpedge_limit_enable 1
