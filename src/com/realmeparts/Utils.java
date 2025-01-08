@@ -187,6 +187,13 @@ public class Utils {
         return defValue;
     }
 
+    public static boolean getGameNode(String filename) {
+        String fileValue = readLine(filename);
+        if (fileValue.charAt(0) == '1')
+            return true;
+        return false;
+    }
+    
     public static String getFileValue(String filename, String defValue) {
         String fileValue = readLine(filename);
         if (fileValue != null) {

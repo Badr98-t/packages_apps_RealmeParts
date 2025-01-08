@@ -67,37 +67,28 @@ public class GameModeTileService extends TileService {
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         enabled = GameModeSwitch.isCurrentlyEnabled(this);
-
-        boolean newEnabledState = !enabled;
-        Utils.writeValue(GameModeSwitch.getFile(), newEnabledState ? "1" : "0");
-        Utils.writeValue(DeviceSettings.TP_LIMIT_ENABLE, newEnabledState ? "0" : "1");
-        SystemProperties.set("perf_profile", newEnabledState ? "1" : "0");
-
-        if (newEnabledState) {
+        if (!enabled) {
             AppNotification.Send(this, GameModeSwitch.GameMode_Notification_Channel_ID, this.getString(R.string.game_mode_title), this.getString(R.string.game_mode_notif_content));
         } else {
             AppNotification.Cancel(this, GameModeSwitch.GameMode_Notification_Channel_ID);
         }
-        if (newEnabledState) {
-            Utils.startService(this, GameModeRotationService.class);
-        } else {
-            Utils.stopService(this, GameModeRotationService.class);
-        }
-        if (sharedPrefs.getBoolean("dnd", false)) {
-            GameModeTileDND(newEnabledState);
-        }
-        sharedPrefs.edit().putBoolean(DeviceSettings.KEY_GAME_SWITCH, newEnabledState).commit();
-        getQsTile().setState(newEnabledState ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
+        Utils.writeValue(GameModeSwitch.getFile(), enabled ? "0" : "1");
+        if (sharedPrefs.getBoolean("dnd", false)) GameModeTileDND();
+        sharedPrefs.edit().putBoolean(DeviceSettings.KEY_GAME_SWITCH, !enabled).commit();
+        getQsTile().setState(enabled ? Tile.STATE_INACTIVE : Tile.STATE_ACTIVE);
         getQsTile().updateTile();
     }
 
-    private void GameModeTileDND(boolean enabled) {
-        if (enabled) {
-            mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_PRIORITY);
-            mNotificationManager.setNotificationPolicy(
-                    new NotificationManager.Policy(NotificationManager.Policy.PRIORITY_CATEGORY_MEDIA, 0, 0));
-        } else {
-            mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
+    private void GameModeTileDND() {
+        switch ((GameModeSwitch.isCurrentlyEnabled(this)) ? 1 : 0) {
+            case 1:
+                mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_PRIORITY);
+                mNotificationManager.setNotificationPolicy(
+                        new NotificationManager.Policy(NotificationManager.Policy.PRIORITY_CATEGORY_MEDIA, 0, 0));
+                break;
+            case 0:
+                mNotificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
+                break;
         }
     }
 }

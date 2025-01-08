@@ -28,3 +28,7 @@ on property:persist.cabc_profile=2
 on property:persist.cabc_profile=3
     write /sys/kernel/oppo_display/cabc 3
     write /sys/kernel/oppo_display/LCM_CABC 3
+
+    # Game Mode
+    chown system system /proc/touchpanel/game_switch_enable
+    chmod 0644 /proc/touchpanel/game_switch_enable
