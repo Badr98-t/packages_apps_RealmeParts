@@ -43,7 +43,6 @@ import java.text.DecimalFormat;
 public class DeviceSettings extends PreferenceFragment
         implements Preference.OnPreferenceChangeListener {
 
-    public static final String KEY_SRGB_SWITCH = "srgb";
     public static final String KEY_HBM_SWITCH = "hbm";
     public static final String KEY_DC_SWITCH = "dc";
     public static final String KEY_OTG_SWITCH = "otg";
@@ -69,7 +68,6 @@ public class DeviceSettings extends PreferenceFragment
     public TwoStatePreference mDNDSwitch;
     public PreferenceCategory mPreferenceCategory;
     private TwoStatePreference mDCModeSwitch;
-    private TwoStatePreference mSRGBModeSwitch;
     private TwoStatePreference mHBMModeSwitch;
     private TwoStatePreference mOTGModeSwitch;
     private TwoStatePreference mGameModeSwitch;
@@ -78,7 +76,6 @@ public class DeviceSettings extends PreferenceFragment
     private boolean CABC_DeviceMatched;
     private boolean DC_DeviceMatched;
     private boolean HBM_DeviceMatched;
-    private boolean sRGB_DeviceMatched;
     private SecureSettingListPreference mCABC;
 
     @Override
@@ -92,11 +89,6 @@ public class DeviceSettings extends PreferenceFragment
         mDCModeSwitch.setEnabled(DCModeSwitch.isSupported());
         mDCModeSwitch.setChecked(DCModeSwitch.isCurrentlyEnabled(this.getContext()));
         mDCModeSwitch.setOnPreferenceChangeListener(new DCModeSwitch());
-
-        mSRGBModeSwitch = findPreference(KEY_SRGB_SWITCH);
-        mSRGBModeSwitch.setEnabled(SRGBModeSwitch.isSupported());
-        mSRGBModeSwitch.setChecked(SRGBModeSwitch.isCurrentlyEnabled(this.getContext()));
-        mSRGBModeSwitch.setOnPreferenceChangeListener(new SRGBModeSwitch());
 
         mHBMModeSwitch = (TwoStatePreference) findPreference(KEY_HBM_SWITCH);
         mHBMModeSwitch.setEnabled(HBMModeSwitch.isSupported());
@@ -226,15 +218,6 @@ public class DeviceSettings extends PreferenceFragment
             }
         }
 
-        JSONArray sRGB = jsonOB.getJSONArray(KEY_SRGB_SWITCH);
-        for (int i = 0; i < sRGB.length(); i++) {
-            if (ProductName.toUpperCase().contains(sRGB.getString(i))) {
-                {
-                    sRGB_DeviceMatched = true;
-                }
-            }
-        }
-
         // Remove CABC preference if device is unsupported
         if (!CABC_DeviceMatched) {
             mPreferenceCategory.removePreference(findPreference(KEY_CABC));
@@ -253,10 +236,5 @@ public class DeviceSettings extends PreferenceFragment
             prefs.edit().putBoolean("HBM_DeviceMatched", false).apply();
         } else prefs.edit().putBoolean("HBM_DeviceMatched", true).apply();
 
-        // Remove sRGB preference if device is unsupported
-        if (!sRGB_DeviceMatched) {
-            mPreferenceCategory.removePreference(findPreference(KEY_SRGB_SWITCH));
-            prefs.edit().putBoolean("sRGB_DeviceMatched", false).apply();
-        } else prefs.edit().putBoolean("sRGB_DeviceMatched", true).apply();
     }
 }
